@@ -1,0 +1,19 @@
+use Mojolicious::Lite;
+
+plugin 'Config' => {
+  file => '/etc/default/checkip',
+  default => {
+    hypnotoad => {
+      listen => ['http://[::]:80'],
+    },
+  },
+};
+
+any '/' => 'checkip';
+
+app->start;
+
+__DATA__
+
+@@ checkip.html.ep
+<%= (((split ', ', $self->req->headers->header('X-Forwarded-For') || $self->tx->remote_address))[0]) %>
